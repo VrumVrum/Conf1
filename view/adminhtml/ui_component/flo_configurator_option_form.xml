@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">flo_configurator_option_form.flo_configurator_option_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Option Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="Flo\Configurator\Block\Adminhtml\Option\Edit\SaveButton"/>
+            <button name="back" class="Flo\Configurator\Block\Adminhtml\Option\Edit\BackButton"/>
+        </buttons>
+        <namespace>flo_configurator_option_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>flo_configurator_option_form.flo_configurator_option_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="flo_configurator_option_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="flo_configurator/option/save"/>
+        </settings>
+        <dataProvider class="Flo\Configurator\Model\Option\DataProvider" name="flo_configurator_option_form_data_source">
+            <settings>
+                <requestFieldName>option_id</requestFieldName>
+                <primaryFieldName>option_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings><label/></settings>
+        <field name="option_id" formElement="input">
+            <settings><visible>false</visible><dataScope>option_id</dataScope></settings>
+        </field>
+        <field name="attribute_id" sortOrder="10" formElement="input">
+            <settings><label translate="true">Attribute ID</label><dataScope>attribute_id</dataScope></settings>
+        </field>
+        <field name="label" sortOrder="20" formElement="input">
+            <settings><label translate="true">Option Label</label><dataScope>label</dataScope></settings>
+        </field>
+        <field name="internal_value_code" sortOrder="30" formElement="input">
+            <settings><label translate="true">Internal Value (Code)</label><dataScope>internal_value_code</dataScope></settings>
+        </field>
+        <field name="price" sortOrder="40" formElement="input">
+            <settings><label translate="true">Price</label><dataScope>price</dataScope></settings>
+        </field>
+        <field name="sort_order" sortOrder="50" formElement="input">
+            <settings><label translate="true">Sort Order</label><dataScope>sort_order</dataScope></settings>
+        </field>
+        <field name="is_active" sortOrder="60" formElement="checkbox">
+            <settings>
+                <label translate="true">Is Active</label>
+                <dataScope>is_active</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

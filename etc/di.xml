@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Flo\Configurator\Model\Configurator\Source\DeviceTypes" type="Flo\Configurator\Model\Configurator\Source\Options">
+        <arguments><argument name="attributeId" xsi:type="string">1</argument></arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\Configurator\Source\Collections" type="Flo\Configurator\Model\Configurator\Source\Options">
+        <arguments><argument name="attributeId" xsi:type="string">2</argument></arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\Configurator\Source\Colors" type="Flo\Configurator\Model\Configurator\Source\Options">
+        <arguments><argument name="attributeId" xsi:type="string">3</argument></arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="flo_configurator_option_listing_data_source" xsi:type="string">Flo\Configurator\Model\ResourceModel\Option\Grid\Collection</item>
+                <item name="flo_configurator_image_listing_data_source" xsi:type="string">Flo\Configurator\Model\ResourceModel\ImageMap\Grid\Collection</item>
+                <item name="flo_configurator_mageworx_rule_listing_data_source" xsi:type="string">Flo\Configurator\Model\ResourceModel\MageworxRule\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Flo\Configurator\Model\ResourceModel\Option\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">flo_configurator_option</argument>
+            <argument name="resourceModel" xsi:type="string">Flo\Configurator\Model\ResourceModel\Option</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\ResourceModel\ImageMap\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">flo_configurator_image_map</argument>
+            <argument name="resourceModel" xsi:type="string">Flo\Configurator\Model\ResourceModel\ImageMap</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\ResourceModel\MageworxRule\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">flo_configurator_mageworx_rule</argument>
+            <argument name="resourceModel" xsi:type="string">Flo\Configurator\Model\ResourceModel\MageworxRule</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Flo\Configurator\Model\MageworxRule\DataProvider">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">Flo\Configurator\Model\ResourceModel\MageworxRule\CollectionFactory</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Flo\Configurator\Ui\Component\Listing\Column\CollectionLabels" type="Flo\Configurator\Ui\Component\Listing\Column\DeviceLabels">
+        <arguments>
+            <argument name="options" xsi:type="object">Flo\Configurator\Model\Configurator\Source\Collections</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Ui\Component\Listing\Column\DeviceLabelsReal" type="Flo\Configurator\Ui\Component\Listing\Column\DeviceLabels">
+        <arguments>
+            <argument name="options" xsi:type="object">Flo\Configurator\Model\Configurator\Source\DeviceTypes</argument>
+        </arguments>
+    </virtualType>
+</config>

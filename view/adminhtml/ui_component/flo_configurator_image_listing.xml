@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">flo_configurator_image_listing.flo_configurator_image_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="*/*/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Image Mapping</label>
+            </button>
+        </buttons>
+        <spinner>flo_configurator_image_columns</spinner>
+        <deps>
+            <dep>flo_configurator_image_listing.flo_configurator_image_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="flo_configurator_image_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">image_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <dataProvider class="Flo\Configurator\Ui\DataProvider\ImageListingProvider" name="flo_configurator_image_listing_data_source">
+            <settings>
+                <requestFieldName>image_id</requestFieldName>
+                <primaryFieldName>image_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="flo_configurator_image_columns">
+        <column name="image_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="device_label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Device Type</label>
+            </settings>
+        </column>
+        <column name="collection_label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Collection</label>
+            </settings>
+        </column>
+        <column name="color_label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Color</label>
+            </settings>
+        </column>
+        <column name="image_path" class="Flo\Configurator\Ui\Component\Listing\Column\Thumbnail">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/thumbnail</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">image_path</item>
+                    <item name="has_preview" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Thumbnail</item>
+                    <item name="additionalClasses" xsi:type="string">configurator-image-column</item>
+                </item>
+            </argument>
+        </column>
+        <column name="priority">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Priority</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Flo\Configurator\Ui\Component\Listing\Column\ImageActions">
+            <settings>
+                <indexField>image_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

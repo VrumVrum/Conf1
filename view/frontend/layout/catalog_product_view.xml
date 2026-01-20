@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="product.info.main">
+            <block class="Flo\Configurator\Block\Product\Configurator"
+                   name="product.configurator"
+                   template="Flo_Configurator::product/configurator.phtml"
+                   before="-">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Flo\Configurator\ViewModel\ConfiguratorData</argument>
+                    <argument name="mageworx_view_model" xsi:type="object">Flo\Configurator\ViewModel\MageworxRules</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">flo_configurator_image_form.flo_configurator_image_listing_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Image Map Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    
+    <settings>
+        <buttons>
+            <button name="save" class="Flo\Configurator\Block\Adminhtml\ImageMap\Edit\SaveButton"/>
+            <button name="delete" class="Flo\Configurator\Block\Adminhtml\ImageMap\Edit\DeleteButton"/>
+            <button name="back" class="Flo\Configurator\Block\Adminhtml\ImageMap\Edit\BackButton"/>
+        </buttons>
+        <namespace>flo_configurator_image_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>flo_configurator_image_form.flo_configurator_image_listing_data_source</dep>
+        </deps>
+    </settings>
+    
+    <dataSource name="flo_configurator_image_listing_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="flo_configurator/image/save"/>
+        </settings>
+        <dataProvider class="Flo\Configurator\Model\ImageMap\DataProvider" name="flo_configurator_image_listing_data_source">
+            <settings>
+                <requestFieldName>image_id</requestFieldName>
+                <primaryFieldName>image_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <fieldset name="general">
+        <settings>
+            <label translate="true">General Information</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        
+        <field name="image_id" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+                <dataScope>image_id</dataScope>
+            </settings>
+        </field>
+        
+        <field name="device_type_option_id" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Device Type</label>
+                <dataScope>device_type_option_id</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Flo\Configurator\Model\Configurator\Source\DeviceOptions"/>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="collection_option_id" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Collection</label>
+                <dataScope>collection_option_id</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Flo\Configurator\Model\Configurator\Source\CollectionOptions"/>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="color_option_id" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Color</label>
+                <dataScope>color_option_id</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Flo\Configurator\Model\Configurator\Source\ColorOptions"/>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="image_path" formElement="fileUploader">
+            <settings>
+                <label translate="true">Thumbnail (Main Image)</label>
+                <componentType>fileUploader</componentType>
+                <dataScope>image_path</dataScope>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param name="url" xsi:type="url" path="flo_configurator/image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+
+        <field name="image_path_2" formElement="fileUploader">
+            <settings>
+                <label translate="true">Gallery Image 1</label>
+                <componentType>fileUploader</componentType>
+                <dataScope>image_path_2</dataScope>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param name="url" xsi:type="url" path="flo_configurator/image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+
+        <field name="image_path_3" formElement="fileUploader">
+            <settings>
+                <label translate="true">Gallery Image 2</label>
+                <componentType>fileUploader</componentType>
+                <dataScope>image_path_3</dataScope>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param name="url" xsi:type="url" path="flo_configurator/image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+
+        <field name="image_path_4" formElement="fileUploader">
+            <settings>
+                <label translate="true">Gallery Image 3</label>
+                <componentType>fileUploader</componentType>
+                <dataScope>image_path_4</dataScope>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param name="url" xsi:type="url" path="flo_configurator/image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+
+        <field name="image_path_5" formElement="fileUploader">
+            <settings>
+                <label translate="true">Gallery Image 4</label>
+                <componentType>fileUploader</componentType>
+                <dataScope>image_path_5</dataScope>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>jpg jpeg gif png</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param name="url" xsi:type="url" path="flo_configurator/image/upload"/>
+                        </uploaderConfig>
+                        <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+
+    </fieldset>
+</form>

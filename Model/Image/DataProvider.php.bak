@@ -1,0 +1,49 @@
+<?php
+namespace Flo\Configurator\Model\Image;
+
+use Flo\Configurator\Model\ResourceModel\Image\CollectionFactory;
+use Magento\Framework\App\RequestInterface;
+
+class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
+{
+    protected $loadedData;
+    protected $request;
+
+    public function __construct(
+        $name,
+        $primaryFieldName,
+        $requestFieldName,
+        CollectionFactory $collectionFactory,
+        RequestInterface $request,
+        array $meta = [],
+        array $data = []
+    ) {
+        $this->collection = $collectionFactory->create();
+        $this->request = $request;
+        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
+    }
+
+    public function getData()
+    {
+        if (isset($this->loadedData)) {
+            return $this->loadedData;
+        }
+
+        $items = $this->collection->getItems();
+        $this->loadedData = [];
+
+        foreach ($items as $item) {
+            $this->loadedData[$item->getId()] = $item->getData();
+        }
+
+        $data = $this->request->getPostValue();
+        if (!empty($data)) {
+            $id = isset($data['image_id']) ? $data['image_id'] : null;
+            if ($id) {
+                $this->loadedData[$id] = $data;
+            }
+        }
+
+        return $this->loadedData;
+    }
+}

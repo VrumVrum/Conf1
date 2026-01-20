@@ -1,0 +1,122 @@
+<?php
+/** @var $block \Flo\Configurator\Block\Product\Configurator */
+if ($block->isConfiguratorEnabled()): 
+    $mageworxViewModel = $block->getData('mageworx_view_model');
+?>
+<style>
+    /* CSS ACTIV DOAR PENTRU PRODUSELE CU CONFIGURATOR */
+    .configurator-wrapper { background:#fff; border:1px solid #ddd; padding:20px; margin-bottom: 20px; clear: both; }
+    .options-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; margin-bottom: 25px; }
+    .option-item { border:1px solid #ddd; padding:8px; text-align:center; cursor:pointer; border-radius:4px; background:#fff; transition: 0.3s; }
+    .option-item.selected { border:2px solid #e77600 !important; background: #fdf8f2; }
+    .preview-box { height:60px; display:flex; align-items:center; justify-content:center; margin-bottom: 5px; }
+    .preview-box img { max-width:100%; max-height:100%; object-fit: contain; }
+    .colors-swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;}
+    .color-swatch-item { width: 50px; height: 50px; border: 1px solid #ddd; cursor: pointer; border-radius: 4px; }
+    .color-swatch-item.selected { border: 2px solid #e77600 !important; }
+    
+    /* Ascundem optiunile native doar pe acest produs */
+    .product-options-wrapper .field { display: none !important; }
+    .product-options-wrapper { display: block !important; visibility: visible !important; }
+</style>
+
+<div class="configurator-wrapper">
+    <div id="step-1-container">
+        <h3>1. Select Device Type</h3>
+        <div id="devices-grid" class="options-grid"></div>
+    </div>
+    <div id="step-2-container" style="display:none;">
+        <h3>2. Select Collection</h3>
+        <div id="collections-grid" class="options-grid"></div>
+    </div>
+    <div id="step-3-container" style="display:none;">
+        <h3>3. Colour<span id="selected-color-name"></span></h3>
+        <div id="colors-grid" class="colors-swatch-grid"></div>
+    </div>
+</div>
+
+<script>
+require(['jquery', 'Magento_Catalog/js/price-utils'], function($, priceUtils) {
+    var mageworxRules = <?= $mageworxViewModel ? $mageworxViewModel->getRulesJson() : '[]' ?>;
+
+    function applyMageworxVisibility() {
+        $('.product-options-wrapper .field').each(function() {
+            var $field = $(this);
+            if ($field.find('[class*="mageworx"]').length > 0 || $field.find('.product-custom-option').length > 0) {
+                $field.attr('style', 'display: block !important');
+            }
+        });
+        $(document).trigger('mageworx_dynamic_options_update');
+    }
+
+    function updateFloConfigurator(deviceId, collectionId, colorId) {
+        var ajaxUrl = window.BASE_URL + 'flo_configurator/index/getoptions';
+        $.ajax({
+            url: ajaxUrl,
+            data: { device_id: deviceId, collection_id: collectionId, color_id: colorId },
+            type: 'GET',
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+                    if (!deviceId) {
+                        var $devGrid = $('#devices-grid'); $devGrid.empty();
+                        $.each(res.devices, function(i, dev) {
+                            $devGrid.append('<div class="option-item device-item" data-id="'+dev.option_id+'"><div class="preview-box"><img src="'+dev.image+'"></div><strong>'+dev.label+'</strong></div>');
+                        });
+                    }
+                    if (deviceId && !collectionId) {
+                        var $colGrid = $('#collections-grid'); $colGrid.empty();
+                        if (res.collections.length > 0) {
+                            $('#step-2-container').show();
+                            $.each(res.collections, function(i, col) {
+                                $colGrid.append('<div class="option-item col-item" data-id="'+col.option_id+'"><div class="preview-box"><img src="'+col.image+'"></div><strong>'+col.label+'</strong></div>');
+                            });
+                        }
+                    }
+                    if (deviceId && collectionId) {
+                        $.each(mageworxRules, function(i, rule) {
+                            if (rule.devices.includes(deviceId.toString()) && rule.collections.includes(collectionId.toString())) {
+                                applyMageworxVisibility();
+                            }
+                        });
+                        if (!colorId) {
+                            var $colorGrid = $('#colors-grid'); $colorGrid.empty();
+                            if (res.colors.length > 0) {
+                                $('#step-3-container').show();
+                                $.each(res.colors, function(i, color) {
+                                    $colorGrid.append('<div class="color-swatch-item" data-id="'+color.option_id+'" data-label="'+color.label+'"><img src="'+color.image+'"></div>');
+                                });
+                            }
+                        }
+                    }
+                    if (res.gallery && res.gallery.length > 0) {
+                        var $gallery = $('[data-gallery-role="gallery-placeholder"]');
+                        var fotorama = $gallery.find('.fotorama-item').data('fotorama');
+                        if (fotorama) { fotorama.load(res.gallery); fotorama.show(0); }
+                    }
+                    if (res.raw_price > 0) {
+                        $('.price-wrapper .price, .product-info-price .price').html(priceUtils.formatPrice(res.raw_price));
+                    }
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() { updateFloConfigurator(); });
+    
+    $(document).on('click', '.device-item', function() {
+        $('.device-item').removeClass('selected'); $(this).addClass('selected');
+        $('#step-2-container, #step-3-container').hide();
+        $('.product-options-wrapper .field').attr('style', 'display: none !important');
+        updateFloConfigurator($(this).data('id'), null, null);
+    });
+    
+    $(document).on('click', '.col-item', function() {
+        $('.col-item').removeClass('selected'); $(this).addClass('selected');
+        $('#step-3-container').hide();
+        $('.product-options-wrapper .field').attr('style', 'display: none !important');
+        updateFloConfigurator($('.device-item.selected').data('id'), $(this).data('id'), null);
+    });
+});
+</script>
+<?php endif; ?>

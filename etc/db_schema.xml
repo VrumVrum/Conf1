@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Database Schema for Flo_Configurator
+ *
+ * @category  Flo
+ * @package   Flo_Configurator
+ * @author    Your Company
+ * @copyright Copyright (c) 2025
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    
+    <!-- Configurator Attributes (Steps) -->
+    <table name="flo_configurator_attribute" resource="default" engine="innodb" comment="Configurator Attributes">
+        <column xsi:type="int" name="attribute_id" unsigned="true" nullable="false" identity="true" comment="Attribute ID"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="64" comment="Attribute Code"/>
+        <column xsi:type="varchar" name="label" nullable="false" length="255" comment="Attribute Label"/>
+        <column xsi:type="smallint" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attribute_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="FLO_CONFIGURATOR_ATTRIBUTE_CODE">
+            <column name="attribute_code"/>
+        </constraint>
+        <index referenceId="FLO_CONFIGURATOR_ATTRIBUTE_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- Configurator Options (Device Types, Collections, Colors, etc.) -->
+    <table name="flo_configurator_option" resource="default" engine="innodb" comment="Configurator Options">
+        <column xsi:type="int" name="option_id" unsigned="true" nullable="false" identity="true" comment="Option ID"/>
+        <column xsi:type="int" name="attribute_id" unsigned="true" nullable="false" comment="Attribute ID"/>
+        <column xsi:type="varchar" name="label" nullable="false" length="255" comment="Option Label"/>
+        <column xsi:type="varchar" name="value" nullable="false" length="255" comment="Option Value"/>
+        <column xsi:type="text" name="image" nullable="true" comment="Option Image Path"/>
+        <column xsi:type="smallint" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="option_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_OPTION_ATTRIBUTE_ID" 
+                    table="flo_configurator_option" column="attribute_id" 
+                    referenceTable="flo_configurator_attribute" referenceColumn="attribute_id" 
+                    onDelete="CASCADE"/>
+        <index referenceId="FLO_CONFIGURATOR_OPTION_ATTRIBUTE_ID" indexType="btree">
+            <column name="attribute_id"/>
+        </index>
+    </table>
+
+    <!-- Configurator Dependencies (Which collections available for device types) -->
+    <table name="flo_configurator_dependency" resource="default" engine="innodb" comment="Configurator Dependencies">
+        <column xsi:type="int" name="dependency_id" unsigned="true" nullable="false" identity="true" comment="Dependency ID"/>
+        <column xsi:type="int" name="parent_attribute_id" unsigned="true" nullable="false" comment="Parent Attribute ID"/>
+        <column xsi:type="int" name="parent_option_id" unsigned="true" nullable="false" comment="Parent Option ID"/>
+        <column xsi:type="int" name="child_attribute_id" unsigned="true" nullable="false" comment="Child Attribute ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="dependency_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_DEPENDENCY_PARENT_ATTRIBUTE_ID" 
+                    table="flo_configurator_dependency" column="parent_attribute_id" 
+                    referenceTable="flo_configurator_attribute" referenceColumn="attribute_id" 
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_DEPENDENCY_PARENT_OPTION_ID" 
+                    table="flo_configurator_dependency" column="parent_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_DEPENDENCY_CHILD_ATTRIBUTE_ID" 
+                    table="flo_configurator_dependency" column="child_attribute_id" 
+                    referenceTable="flo_configurator_attribute" referenceColumn="attribute_id" 
+                    onDelete="CASCADE"/>
+        <index referenceId="FLO_CONFIGURATOR_DEPENDENCY_PARENT_OPTION_ID" indexType="btree">
+            <column name="parent_option_id"/>
+        </index>
+    </table>
+
+    <!-- Option-to-Option Dependencies -->
+    <table name="flo_configurator_option_dependency" resource="default" engine="innodb" comment="Configurator Option Dependencies">
+        <column xsi:type="int" name="dependency_id" unsigned="true" nullable="false" identity="true" comment="Dependency ID"/>
+        <column xsi:type="int" name="parent_option_id" unsigned="true" nullable="false" comment="Parent Option ID"/>
+        <column xsi:type="int" name="child_option_id" unsigned="true" nullable="false" comment="Child Option ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="dependency_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_OPTION_DEPENDENCY_PARENT_OPTION_ID" 
+                    table="flo_configurator_option_dependency" column="parent_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_OPTION_DEPENDENCY_CHILD_OPTION_ID" 
+                    table="flo_configurator_option_dependency" column="child_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <index referenceId="FLO_CONFIGURATOR_OPTION_DEPENDENCY_PARENT_OPTION_ID" indexType="btree">
+            <column name="parent_option_id"/>
+        </index>
+    </table>
+
+    <!-- Image Mapping (collection + color -> specific image) -->
+    <table name="flo_configurator_image_map" resource="default" engine="innodb" comment="Configurator Image Mapping">
+        <column xsi:type="int" name="map_id" unsigned="true" nullable="false" identity="true" comment="Map ID"/>
+        <column xsi:type="int" name="device_type_option_id" unsigned="true" nullable="true" comment="Device Type Option ID"/>
+        <column xsi:type="int" name="collection_option_id" unsigned="true" nullable="true" comment="Collection Option ID"/>
+        <column xsi:type="int" name="color_option_id" unsigned="true" nullable="true" comment="Color Option ID"/>
+        <column xsi:type="text" name="image_path" nullable="false" comment="Image Path"/>
+        <column xsi:type="smallint" name="priority" unsigned="true" nullable="false" default="0" comment="Priority"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="map_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_IMAGE_MAP_DEVICE_TYPE_OPTION_ID" 
+                    table="flo_configurator_image_map" column="device_type_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_IMAGE_MAP_COLLECTION_OPTION_ID" 
+                    table="flo_configurator_image_map" column="collection_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_IMAGE_MAP_COLOR_OPTION_ID" 
+                    table="flo_configurator_image_map" column="color_option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <index referenceId="FLO_CONFIGURATOR_IMAGE_MAP_DEVICE_TYPE_OPTION_ID" indexType="btree">
+            <column name="device_type_option_id"/>
+        </index>
+        <index referenceId="FLO_CONFIGURATOR_IMAGE_MAP_COLLECTION_OPTION_ID" indexType="btree">
+            <column name="collection_option_id"/>
+        </index>
+        <index referenceId="FLO_CONFIGURATOR_IMAGE_MAP_COLOR_OPTION_ID" indexType="btree">
+            <column name="color_option_id"/>
+        </index>
+    </table>
+
+    <!-- Price Rules -->
+    <table name="flo_configurator_price_rule" resource="default" engine="innodb" comment="Configurator Price Rules">
+        <column xsi:type="int" name="rule_id" unsigned="true" nullable="false" identity="true" comment="Rule ID"/>
+        <column xsi:type="int" name="option_id" unsigned="true" nullable="false" comment="Option ID"/>
+        <column xsi:type="varchar" name="price_type" nullable="false" length="32" comment="Price Type (fixed, percentage, base)"/>
+        <column xsi:type="decimal" name="price_value" scale="4" precision="12" nullable="false" default="0" comment="Price Value"/>
+        <column xsi:type="smallint" name="priority" unsigned="true" nullable="false" default="0" comment="Priority"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FLO_CONFIGURATOR_PRICE_RULE_OPTION_ID" 
+                    table="flo_configurator_price_rule" column="option_id" 
+                    referenceTable="flo_configurator_option" referenceColumn="option_id" 
+                    onDelete="CASCADE"/>
+        <index referenceId="FLO_CONFIGURATOR_PRICE_RULE_OPTION_ID" indexType="btree">
+            <column name="option_id"/>
+        </index>
+        <index referenceId="FLO_CONFIGURATOR_PRICE_RULE_PRIORITY" indexType="btree">
+            <column name="priority"/>
+        </index>
+    </table>
+
+</schema>

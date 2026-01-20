@@ -1,0 +1,19 @@
+<div class="configurator-container">
+    <div class="configurator-steps">
+        <div class="configurator-step" data-attribute-code="device_type">
+            <h3 class="step-title"><?= __('Device Type') ?></h3>
+            <div class="options-grid">
+                <?php foreach ($block->getDeviceOptions() as $option): ?>
+                    <div class="option-item" data-option-id="<?= $option['id'] ?>">
+                        <?php if ($option['image']): ?>
+                            <div class="option-image">
+                                <img src="<?= $option['image'] ?>" alt="<?= $option['label'] ?>" />
+                            </div>
+                        <?php endif; ?>
+                        <div class="option-label"><?= $option['label'] ?></div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>

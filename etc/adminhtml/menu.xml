@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Flo_Configurator::configurator_root"
+             title="Flo Configurator"
+             module="Flo_Configurator"
+             sortOrder="10"
+             resource="Magento_Backend::admin"/>
+
+        <add id="Flo_Configurator::options"
+             title="Manage Configurator Options"
+             module="Flo_Configurator"
+             sortOrder="10"
+             parent="Flo_Configurator::configurator_root"
+             action="flo_configurator/option/index"
+             resource="Magento_Backend::admin"/>
+
+        <add id="Flo_Configurator::images"
+             title="Manage Configurator Images"
+             module="Flo_Configurator"
+             sortOrder="20"
+             parent="Flo_Configurator::configurator_root"
+             action="flo_configurator/image/index"
+             resource="Magento_Backend::admin"/>
+
+        <add id="Flo_Configurator::mageworx_rules"
+             title="Mageworx Personalization Rules"
+             module="Flo_Configurator"
+             sortOrder="30"
+             parent="Flo_Configurator::configurator_root"
+             action="flo_configurator/mageworxrule/index"
+             resource="Magento_Backend::admin"/>
+    </menu>
+</config>

@@ -1,0 +1,18 @@
+define(['jquery', 'mustache'], function($, Mustache) {
+    'use strict';
+    return {
+        renderOptions: function(container, options) {
+            var template = '{{#items}}' +
+                '<div class="option-item" data-option-id="{{id}}">' +
+                    '{{#image}}' +
+                        '<div class="option-image"><img src="{{image}}" alt="{{label}}"></div>' +
+                    '{{/image}}' +
+                    '<div class="option-label">{{label}}</div>' +
+                '</div>' +
+            '{{/items}}';
+            
+            var html = Mustache.render(template, {items: options});
+            $(container).find('.options-grid').html(html);
+        }
+    };
+});

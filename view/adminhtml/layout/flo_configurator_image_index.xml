@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Flo_Configurator::css/source/_module.css"/>
+    </head>
+    <body>
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Text" name="configurator_custom_css">
+                <arguments>
+                    <argument name="text" xsi:type="string"><![CDATA[<style>.configurator-image-column { max-width: 15% !important; width: 15% !important; }</style>]]></argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <uiComponent name="flo_configurator_image_listing"/>
+        </referenceContainer>
+    </body>
+</page>

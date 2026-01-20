@@ -1,0 +1,98 @@
+<?php
+/**
+ * Flo_Configurator Product Configurator Template
+ *
+ * @var $block \Flo\Configurator\Block\Product\Configurator
+ * @var $viewModel \Flo\Configurator\ViewModel\ConfiguratorData
+ */
+
+if (!$block->isConfiguratorEnabled()) {
+    return;
+}
+
+$viewModel = $block->getData('view_model');
+$attributes = $viewModel->getAttributes();
+?>
+
+<div class="flo-configurator" 
+     data-mage-init='{"Flo_Configurator/js/configurator": {
+         "productId": <?= (int)$block->getProductId() ?>,
+         "optionsUrl": "<?= $block->escapeUrl($block->getOptionsUrl()) ?>",
+         "priceUrl": "<?= $block->escapeUrl($block->getPriceUrl()) ?>",
+         "addToCartUrl": "<?= $block->escapeUrl($block->getAddToCartUrl()) ?>",
+         "attributes": <?= /* @noEscape */ $viewModel->getAttributesJson() ?>
+     }}'>
+    
+    <div class="configurator-container">
+        <!-- Left Column: Product Image (Sticky) -->
+        <div class="configurator-image-column">
+            <div class="configurator-image-wrapper sticky">
+                <img id="configurator-main-image" 
+                     src="<?= $block->escapeUrl($block->getProduct()->getImage()->getImageUrl()) ?>"
+                     alt="<?= $block->escapeHtml($block->getProduct()->getName()) ?>"
+                     class="configurator-main-image" />
+            </div>
+        </div>
+
+        <!-- Right Column: Configuration Steps -->
+        <div class="configurator-options-column">
+            <div class="configurator-steps">
+                <?php foreach ($attributes as $attribute): ?>
+                    <div class="configurator-step" 
+                         data-attribute-code="<?= $block->escapeHtmlAttr($attribute->getAttributeCode()) ?>"
+                         data-attribute-id="<?= (int)$attribute->getAttributeId() ?>">
+                        
+                        <h3 class="step-title">
+                            <?= $block->escapeHtml($attribute->getLabel()) ?>
+                        </h3>
+
+                        <div class="step-options" data-role="options-container">
+                            <!-- Options loaded via AJAX -->
+                            <div class="loader" data-role="loader">
+                                <span><?= $block->escapeHtml(__('Loading...')) ?></span>
+                            </div>
+                        </div>
+
+                        <?php if ($attribute->getAttributeCode() === 'size'): ?>
+                            <!-- Custom Size Input -->
+                            <div class="size-input-wrapper" style="display:none;" data-role="size-input">
+                                <input type="text" 
+                                       name="custom_size" 
+                                       class="input-text" 
+                                       placeholder="<?= $block->escapeHtmlAttr(__('Enter size')) ?>" />
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($attribute->getAttributeCode() === 'extra_options'): ?>
+                            <!-- MageWorx Custom Options Container -->
+                            <div class="mageworx-options-container" data-role="mageworx-options">
+                                <!-- MageWorx options will be loaded here -->
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Price Display -->
+            <div class="configurator-price-block">
+                <div class="price-label"><?= $block->escapeHtml(__('Total Price')) ?>:</div>
+                <div class="price-amount" data-role="final-price">
+                    <span class="price">--</span>
+                </div>
+            </div>
+
+            <!-- Add to Cart Button -->
+            <div class="configurator-actions">
+                <button type="button" 
+                        class="action primary tocart" 
+                        data-role="add-to-cart"
+                        disabled>
+                    <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Form Data -->
+    <input type="hidden" name="configurator_data" data-role="configurator-data" value="" />
+</div>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">flo_configurator_option_listing.flo_configurator_option_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="*/*/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Option</label>
+            </button>
+        </buttons>
+        <spinner>flo_configurator_option_columns</spinner>
+        <deps>
+            <dep>flo_configurator_option_listing.flo_configurator_option_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="flo_configurator_option_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">option_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Flo_Configurator::configurator</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="flo_configurator_option_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>option_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="flo_configurator_option_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>option_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="option_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="attribute_id" class="Flo\Configurator\Ui\Component\Listing\Column\AttributeName">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Attribute Type</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Option Label</label>
+            </settings>
+        </column>
+        <column name="internal_value_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Internal Value Code</label>
+            </settings>
+        </column>
+        <column name="price" class="Magento\Catalog\Ui\Component\Listing\Columns\Price">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Price</label>
+            </settings>
+        </column>
+        <column name="sort_order">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Sort Order</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Flo\Configurator\Ui\Component\Listing\Column\OptionActions">
+            <settings>
+                <indexField>option_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

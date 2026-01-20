@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Flo\Configurator\Api\AttributeRepositoryInterface" type="Flo\Configurator\Model\AttributeRepository"/>
+    
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="flo_configurator_option_listing_data_source" xsi:type="string">Flo\Configurator\Model\ResourceModel\Option\Grid\Collection</item>
+                <item name="flo_configurator_image_listing_data_source" xsi:type="string">Flo\Configurator\Model\ResourceModel\Image\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Flo\Configurator\Model\ResourceModel\Option\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">flo_configurator_option</argument>
+            <argument name="resourceModel" xsi:type="string">Flo\Configurator\Model\ResourceModel\Option</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Flo\Configurator\Model\Source\DeviceOptions" type="Flo\Configurator\Model\Source\Options">
+        <arguments>
+            <argument name="attributeCode" xsi:type="string">device_type</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\Source\CollectionOptions" type="Flo\Configurator\Model\Source\Options">
+        <arguments>
+            <argument name="attributeCode" xsi:type="string">collection</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Flo\Configurator\Model\Source\ColorOptions" type="Flo\Configurator\Model\Source\Options">
+        <arguments>
+            <argument name="attributeCode" xsi:type="string">color</argument>
+        </arguments>
+    </virtualType>
+</config>

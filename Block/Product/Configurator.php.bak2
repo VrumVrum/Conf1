@@ -1,0 +1,56 @@
+<?php
+declare(strict_types=1);
+
+namespace Flo\Configurator\Block\Product;
+
+use Magento\Catalog\Block\Product\View;
+
+class Configurator extends View
+{
+    /**
+     * @return bool
+     */
+    public function isConfiguratorEnabled(): bool
+    {
+        $product = $this->getProduct();
+        return $product && (bool)$product->getData('enable_configurator');
+    }
+
+    /**
+     * Daca configuratorul nu este activat, returneaza string gol (nu randeaza nimic in frontend)
+     * @return string
+     */
+    protected function _toHtml()
+    {
+        if (!$this->isConfiguratorEnabled()) {
+            return '';
+        }
+        return parent::_toHtml();
+    }
+
+    public function getProductId(): ?int
+    {
+        $product = $this->getProduct();
+        return $product ? (int)$product->getId() : null;
+    }
+
+    public function getOptionsUrl(): string
+    {
+        return $this->getUrl('configurator/options/index');
+    }
+
+    public function getPriceUrl(): string
+    {
+        return $this->getUrl('configurator/price/calculate');
+    }
+
+    public function getAddToCartUrl($product, $additional = [])
+    {
+        if (!$product) {
+            $product = $this->getProduct();
+        }
+        return $this->getUrl('checkout/cart/add', [
+            'product' => $product ? $product->getId() : 0
+        ]);
+    }
+}

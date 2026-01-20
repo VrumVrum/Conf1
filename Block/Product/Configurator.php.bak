@@ -1,0 +1,96 @@
+<?php
+declare(strict_types=1);
+
+namespace Flo\Configurator\Block\Product;
+
+use Magento\Catalog\Block\Product\View;
+use Magento\Catalog\Block\Product\Context; // ATENTIE: Context specific de Catalog, nu cel generic
+use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Framework\Url\EncoderInterface;
+use Magento\Framework\Json\EncoderInterface as JsonEncoderInterface;
+use Magento\Framework\Stdlib\StringUtils;
+use Magento\Catalog\Helper\Product;
+use Magento\Catalog\Model\ProductTypes\ConfigInterface;
+use Magento\Framework\Locale\FormatInterface;
+use Magento\Customer\Model\Session;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+
+class Configurator extends View
+{
+    private ImageHelper $imageHelper;
+
+    public function __construct(
+        Context $context,
+        EncoderInterface $urlEncoder,
+        JsonEncoderInterface $jsonEncoder,
+        StringUtils $string,
+        Product $productHelper,
+        ConfigInterface $productTypeConfig,
+        FormatInterface $localeFormat,
+        Session $customerSession,
+        ProductRepositoryInterface $productRepository,
+        PriceCurrencyInterface $priceCurrency,
+        ImageHelper $imageHelper,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $urlEncoder,
+            $jsonEncoder,
+            $string,
+            $productHelper,
+            $productTypeConfig,
+            $localeFormat,
+            $customerSession,
+            $productRepository,
+            $priceCurrency,
+            $data
+        );
+        $this->imageHelper = $imageHelper;
+    }
+
+    public function isConfiguratorEnabled(): bool
+    {
+        $product = $this->getProduct();
+        return $product && (int)$product->getData('enable_configurator') === 1;
+    }
+
+    public function getProductId(): ?int
+    {
+        $product = $this->getProduct();
+        return $product ? (int)$product->getId() : null;
+    }
+
+    public function getOptionsUrl(): string
+    {
+        return $this->getUrl('configurator/options/index');
+    }
+
+    public function getPriceUrl(): string
+    {
+        return $this->getUrl('configurator/price/calculate');
+    }
+
+    public function getAddToCartUrl($product = null, $additional = [])
+    {
+        if ($product === null) {
+            $product = $this->getProduct();
+        }
+        return $this->getUrl('checkout/cart/add', [
+            'product' => $product ? $product->getId() : 0,
+        ]);
+    }
+
+    public function getProductImageUrl(): string
+    {
+        $product = $this->getProduct();
+        if (!$product) {
+            return '';
+        }
+        
+        return $this->imageHelper
+            ->init($product, 'product_base_image')
+            ->getUrl();
+    }
+}

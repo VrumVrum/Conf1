@@ -1,0 +1,53 @@
+<?php
+/** @var \Flo\Configurator\ViewModel\MageworxRules $viewModel */
+$viewModel = $block->getMageworxViewModel();
+?>
+<script>
+require(['jquery'], function($) {
+    var configuratorRules = <?= $viewModel->getRulesJson() ?>;
+
+    function applyMageworxRules() {
+        var selectedDevice = $('.device-item.selected').data('id');
+        var selectedCollection = $('.col-item.selected').data('id');
+
+        // 1. Ascundem toate grupurile Mageworx initial
+        // Mageworx Dynamic Options foloseste de obicei containere cu ID-ul template-ului
+        $('[data-mageworx-option-group-id]').hide();
+
+        if (!selectedDevice || !selectedCollection) {
+            return;
+        }
+
+        // 2. Gasim regula care se potriveste
+        $.each(configuratorRules, function(i, rule) {
+            var deviceMatch = rule.devices.indexOf(selectedDevice.toString()) !== -1;
+            var collectionMatch = rule.collections.indexOf(selectedCollection.toString()) !== -1;
+
+            if (deviceMatch && collectionMatch) {
+                // 3. Afisam template-ul Mageworx corespunzator
+                var mageworxId = rule.mageworx_id;
+                // Cautam div-ul generat de Mageworx. 
+                // Nota: Selectorul depinde de versiunea de Mageworx, 
+                // dar de obicei este un container care contine ID-ul template-ului.
+                $('[data-mageworx-option-group-id="' + mageworxId + '"]').show();
+                
+                // Fortam Mageworx sa revalideze dependintele daca e necesar
+                $(document).trigger('mageworx_dynamic_options_update');
+            }
+        });
+    }
+
+    // Ne agatam de evenimentele de click existente in pagina ta
+    $(document).on('click', '.device-item, .col-item', function() {
+        // Asteptam un pic sa se proceseze clasa 'selected' din scriptul tau principal
+        setTimeout(function() {
+            applyMageworxRules();
+        }, 100);
+    });
+
+    // Initializare la load
+    $(document).ready(function() {
+        setTimeout(applyMageworxRules, 500);
+    });
+});
+</script>

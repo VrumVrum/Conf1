@@ -1,0 +1,26 @@
+.option-item {
+    cursor: pointer !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    transition: 0.3s;
+    user-select: none; /* Blochează cursorul de selecție text */
+}
+
+.option-item:hover {
+    border-color: #006bb4;
+    background-color: #f8f8f8;
+}
+
+.option-label {
+    pointer-events: none; /* Ignoră textul la click pentru a nu schimba cursorul */
+    margin-top: 10px;
+}
+
+.option-image {
+    width: 100%;
+    max-width: 120px;
+}
+
